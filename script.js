@@ -45,23 +45,23 @@ function draw() {
 }
 
 function handleMouseMove(e) {
-	if(!mouseDown) return;
-	const boundingBox = canvas.getBoundingClientRect();
-	const x = Math.floor((e.clientX - boundingBox.left) / scale);
-	const y = Math.floor((e.clientY - boundingBox.top) / scale);
-	context.fillStyle = "#000000";
+	// if(!mouseDown) return;
+	// const boundingBox = canvas.getBoundingClientRect();
+	// const x = Math.floor((e.clientX - boundingBox.left) / scale);
+	// const y = Math.floor((e.clientY - boundingBox.top) / scale);
+	// context.fillStyle = "#000000";
 
-	if(previousPos) {
-		context.fillRect(previousPos.x * scale, previousPos.y * scale, scale, scale);
-		for(var point of getLinePoints(previousPos, new Vector2(x, y))) {
-			mouseGradientLocations.push(point);
-			context.fillRect(point.x * scale, point.y * scale, scale, scale);
-		}
-	}
+	// if(previousPos) {
+	// 	context.fillRect(previousPos.x * scale, previousPos.y * scale, scale, scale);
+	// 	for(var point of getLinePoints(previousPos, new Vector2(x, y))) {
+	// 		mouseGradientLocations.push(point);
+	// 		context.fillRect(point.x * scale, point.y * scale, scale, scale);
+	// 	}
+	// }
 
-	context.fillRect(x * scale, y * scale, scale, scale);
+	// context.fillRect(x * scale, y * scale, scale, scale);
 
-	previousPos = new Vector2(x, y);
+	// previousPos = new Vector2(x, y);
 }
 
 function normalize(value, min, max) {
@@ -130,13 +130,5 @@ canvas.addEventListener("mouseup", (e) => {
 		}
 	}
 	mouseGradientLocations = []; // reset this to make sure we keep lag low
-	// for(var point of mouseGradientLocations) {
-			// 	const dist = getDistance(new Vector2(x, y), point);
-			// 	if(dist <= 3) {
-			// 		const nDist = normalize(dist, 0, 3);
-			// 		mouseValue = -6 * (nDist ** 5) + 15 * (nDist ** 4) - 10 * (nDist ** 3) + 1
-			// 	}
-			// }
-			//let finalValue = normalize(noiseValue + mouseValue, 0, 2);
 });
 window.requestAnimationFrame(draw);
