@@ -2,18 +2,18 @@ const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 const inc = 0.05;
 const scale = 10;
+const strength = 0.15;
 const rows = canvas.clientHeight / scale;
 const cols = canvas.clientWidth / scale;
 context.fillStyle = "#FFFFFF";
 context.fillRect(0, 0, 720, 480);
 noise.seed(Math.random());
 
-let previousPos;
+let previousMousePos;
 let mouseDown = false;
 let zOff = 0;
 let flowField = [];
-let mouseGradientLocations = [];
-let screenGradient = [];
+let mouseVectors = [];
 let particles = [];
 for(var i = 0; i < 400; i++) {
 	particles[i] = new Particle();
@@ -28,7 +28,11 @@ function draw() {
 		for(var x = 0; x < cols; x++) {
 			let noiseValue = normalize(noise.perlin3(xOff, yOff, zOff), -1, 1);
 			let vector = new Vector2(Math.cos(noiseValue * Math.PI * 3), Math.sin(noiseValue * Math.PI * 3));
-			vector.multiply(0.15);
+			vector.multiply(strength);
+			if(mouseVectors[x + (y * cols)]) {
+				vector = mouseVectors[x + (y * cols)];
+				vector.multiply(strength * 6.6);
+			}
 			flowField[x + (y * cols)] = vector;
 			xOff += inc;
 		}	
@@ -45,23 +49,36 @@ function draw() {
 }
 
 function handleMouseMove(e) {
-	// if(!mouseDown) return;
-	// const boundingBox = canvas.getBoundingClientRect();
-	// const x = Math.floor((e.clientX - boundingBox.left) / scale);
-	// const y = Math.floor((e.clientY - boundingBox.top) / scale);
-	// context.fillStyle = "#000000";
-
-	// if(previousPos) {
-	// 	context.fillRect(previousPos.x * scale, previousPos.y * scale, scale, scale);
-	// 	for(var point of getLinePoints(previousPos, new Vector2(x, y))) {
-	// 		mouseGradientLocations.push(point);
-	// 		context.fillRect(point.x * scale, point.y * scale, scale, scale);
-	// 	}
-	// }
-
-	// context.fillRect(x * scale, y * scale, scale, scale);
-
-	// previousPos = new Vector2(x, y);
+	if(!mouseDown) return;
+	const boundingBox = canvas.getBoundingClientRect();
+	const x = Math.floor((e.clientX - boundingBox.left) / scale);
+	const y = Math.floor((e.clientY - boundingBox.top) / scale);
+	if(previousMousePos) {
+		const mouseCursor = new Vector2(x, y);
+		const points = getLinePoints(previousMousePos, mouseCursor);
+		console.log(points);
+		if(points.length == 0) return;
+		let previousVector = points[0].copy();
+		previousVector.subtract(previousMousePos);
+		// previousVector.normalize();
+		mouseVectors[previousMousePos.x + (previousMousePos.y * cols)] = previousVector;
+		console.log(mouseVectors);
+		for(var i = 0; i < points.length; i++) {
+			let vector = mouseCursor.copy();
+			let prevPos = points[i - 1];
+			if(!points[i - 1]) {
+				prevPos = previousMousePos;
+			}
+			vector.subtract(prevPos);
+			// vector.normalize();
+			mouseVectors[prevPos.x + (prevPos.y * cols)] = vector;
+		}
+		let lastVector = new Vector2(x, y);
+		lastVector.subtract(points[points.length - 1]);
+		// lastVector.normalize();
+		mouseVectors[points[points.length - 1].x + (points[points.length - 1].y * cols)] = lastVector;
+	}
+	previousMousePos = new Vector2(x, y);
 }
 
 function normalize(value, min, max) {
@@ -115,20 +132,6 @@ canvas.addEventListener("mousedown", (e) => mouseDown = true);
 canvas.addEventListener("mousemove", handleMouseMove);
 canvas.addEventListener("mouseup", (e) => {
 	mouseDown = false;
-	previousPos = undefined;
-	for(var y = 0; y < rows; y++) {
-		for(var x = 0; x < cols; x++) {
-			let acc = 0;
-			for(var point of mouseGradientLocations) {
-				const dist = getDistance(new Vector2(x, y), point);
-				if(dist <= 2) {
-					const nDist = normalize(dist, 0, 3);
-					acc += 6 * (nDist ** 5) - 15 * (nDist ** 4) + 10 * (nDist ** 3);
-				}
-			}
-			screenGradient[x + (y * cols)] = acc / 4;
-		}
-	}
-	mouseGradientLocations = []; // reset this to make sure we keep lag low
+	previousMousePos = undefined;
 });
 window.requestAnimationFrame(draw);

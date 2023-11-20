@@ -24,10 +24,19 @@ class Vector2 {
     multiply(value) {
         this.x *= value;
         this.y *= value;
+        this.calculateMagnitude();
     }
-    dot(vector) {
-        this.x *= vector.x;
-        this.y *= vector.y;
+    subtract(vector) {
+        this.x -= vector.x;
+        this.y -= vector.y;
+        this.calculateMagnitude();
+    }
+    dotProduct(vector) {
+        return this.x * vector.x + this.y * vector.y;
+    }
+    normalize() {
+        this.x /= this.mag;
+        this.y /= this.mag;
         this.calculateMagnitude();
     }
     clamp(value) {
