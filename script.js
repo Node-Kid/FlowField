@@ -28,11 +28,11 @@ function draw() {
 		for(var x = 0; x < cols; x++) {
 			let noiseValue = normalize(noise.perlin3(xOff, yOff, zOff), -1, 1);
 			let vector = new Vector2(Math.cos(noiseValue * Math.PI * 3), Math.sin(noiseValue * Math.PI * 3));
-			vector.multiply(strength);
 			if(mouseVectors[x + (y * cols)]) {
-				vector = mouseVectors[x + (y * cols)];
-				vector.multiply(strength * 6.6);
+				//vector.multiplyVector(mouseVectors[x + (y * cols)]);
+				vector = mouseVectors[x + (y * cols)]
 			}
+			// vector.multiplyScalar(strength);
 			flowField[x + (y * cols)] = vector;
 			xOff += inc;
 		}	
@@ -56,13 +56,12 @@ function handleMouseMove(e) {
 	if(previousMousePos) {
 		const mouseCursor = new Vector2(x, y);
 		const points = getLinePoints(previousMousePos, mouseCursor);
-		console.log(points);
 		if(points.length == 0) return;
 		let previousVector = points[0].copy();
 		previousVector.subtract(previousMousePos);
+		previousVector.multiplyScalar(3);
 		// previousVector.normalize();
 		mouseVectors[previousMousePos.x + (previousMousePos.y * cols)] = previousVector;
-		console.log(mouseVectors);
 		for(var i = 0; i < points.length; i++) {
 			let vector = mouseCursor.copy();
 			let prevPos = points[i - 1];
@@ -71,11 +70,13 @@ function handleMouseMove(e) {
 			}
 			vector.subtract(prevPos);
 			// vector.normalize();
+			vector.multiplyScalar(3);
 			mouseVectors[prevPos.x + (prevPos.y * cols)] = vector;
 		}
 		let lastVector = new Vector2(x, y);
 		lastVector.subtract(points[points.length - 1]);
 		// lastVector.normalize();
+		lastVector.multiplyScalar(3);
 		mouseVectors[points[points.length - 1].x + (points[points.length - 1].y * cols)] = lastVector;
 	}
 	previousMousePos = new Vector2(x, y);

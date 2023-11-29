@@ -14,14 +14,15 @@ class Particle {
         this.vel.add(this.accel);
         this.vel.clamp(this.maxSpeed);
         this.pos.add(this.vel);
-        this.accel.multiply(0);
+        this.accel.multiplyScalar(0);
 
     }
     applyForce(force) {
         this.accel.add(force);
     }
     draw(context) {
-        context.fillStyle = "#000000"
+        console.log(this.vel.mag);
+        context.fillStyle = "#000000";
         context.fillRect(this.pos.x, this.pos.y, 2, 2);
     }
     edgeCheck() {

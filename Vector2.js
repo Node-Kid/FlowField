@@ -21,10 +21,16 @@ class Vector2 {
     getMag() {
         return this.mag;
     }
-    multiply(value) {
+    multiplyScalar(value) {
         this.x *= value;
         this.y *= value;
         this.calculateMagnitude();
+    }
+    multiplyVector(vector) {
+        this.x *= vector.x;
+        this.y *= vector.y;
+        this.calculateMagnitude();
+
     }
     subtract(vector) {
         this.x -= vector.x;
@@ -40,7 +46,7 @@ class Vector2 {
         this.calculateMagnitude();
     }
     clamp(value) {
-        this.multiply(value / this.mag);
+        this.multiplyScalar(value / this.mag);
         this.calculateMagnitude();
     }
     copy() {
