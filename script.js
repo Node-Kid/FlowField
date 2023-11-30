@@ -67,5 +67,4 @@ canvas.addEventListener("mousemove", (e) => {
 	mousePos = new Vector2(x, y);
 });
 
-
 window.requestAnimationFrame(draw);

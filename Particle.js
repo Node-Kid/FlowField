@@ -15,7 +15,6 @@ class Particle {
         this.vel.clamp(this.maxSpeed);
         this.pos.add(this.vel);
         this.accel.multiply(0);
-
     }
     applyForce(force) {
         this.accel.add(force);
@@ -45,6 +44,5 @@ class Particle {
         let relativeY = Math.floor(this.pos.y / scale);
         this.applyForce(flowField[relativeX + (relativeY * cols)]); 
         this.applyForce(gravityForces[relativeX + (relativeY * cols)]); 
-
     }
 }
