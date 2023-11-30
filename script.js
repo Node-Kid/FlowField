@@ -55,12 +55,12 @@ function normalize(value, min, max) {
 	if(value > max) value = max;
 	return (value - min) / (max - min);
 }
-canvas.addEventListener("mousedown", (e) => mouseDown = true);
-canvas.addEventListener("mouseup", (e) => {
+document.addEventListener("mousedown", (e) => mouseDown = true);
+document.addEventListener("mouseup", (e) => {
 	mouseDown = false;
 	gravityForces.fill(new Vector2(0, 0), 0, rows * cols);
 });
-canvas.addEventListener("mousemove", (e) => {
+document.addEventListener("mousemove", (e) => {
 	const boundingBox = canvas.getBoundingClientRect();
 	const x = Math.floor((e.clientX - boundingBox.left) / scale);
 	const y = Math.floor((e.clientY - boundingBox.top) / scale);
