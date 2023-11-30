@@ -9,6 +9,11 @@ class Vector2 {
         this.y += vector.y;
         this.calculateMagnitude();
     }
+    subtract(vector) {
+        this.x -= vector.x;
+        this.y -= vector.y;
+        this.calculateMagnitude();
+    }
     calculateMagnitude() {
         this.mag = Math.sqrt(this.x ** 2 + this.y ** 2);
     }
@@ -24,6 +29,7 @@ class Vector2 {
     multiply(value) {
         this.x *= value;
         this.y *= value;
+        this.calculateMagnitude();
     }
     dot(vector) {
         this.x *= vector.x;
@@ -34,7 +40,13 @@ class Vector2 {
         this.multiply(value / this.mag);
         this.calculateMagnitude();
     }
+    normalize() {
+        if(this.mag == 0) return;
+        this.x /= this.mag;
+        this.y /= this.mag;
+        this.mag = 1;
+    }
     copy() {
-        return new Vector2(this.x, this.y);
+        return new Vector2(this.x, this.y); 
     }
 }

@@ -40,9 +40,11 @@ class Particle {
             this.pos.x = Math.floor(Math.random() * 1279);
         }
     }
-    follow(flowField) {
+    follow(flowField, gravityForces) {
         let relativeX = Math.floor(this.pos.x / scale);
         let relativeY = Math.floor(this.pos.y / scale);
         this.applyForce(flowField[relativeX + (relativeY * cols)]); 
+        this.applyForce(gravityForces[relativeX + (relativeY * cols)]); 
+
     }
 }
