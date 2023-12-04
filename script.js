@@ -32,7 +32,7 @@ function draw() {
 				vectorToMouse.subtract(new Vector2(x, y));
 				const dist = vectorToMouse.mag;
 				vectorToMouse.normalize();
-				vectorToMouse.multiply((1 - normalize(dist, 0, 10)));
+				vectorToMouse.multiply(-1 * (1 - normalize(dist, 0, 10)));
 				gravityForces[x + (y * cols)] = vectorToMouse;
 			}
 			vector.multiply(0.15);
